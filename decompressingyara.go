@@ -1,6 +1,6 @@
 package main
 
-// #cgo LDFLAGS: -lyara -lcrypto -lmagic -ljansson -lm
+// #cgo LDFLAGS: -l:libyara.a -lcrypto -lmagic -l:libjansson.a -lm
 // #include <yara.h>
 import "C"
 
