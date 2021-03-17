@@ -1,6 +1,6 @@
 package main
 
-// #cgo LDFLAGS: /usr/local/lib/libyara.a -lcrypto -lmagic -ljansson -lm
+// #cgo LDFLAGS: -lyara -lcrypto -lmagic -ljansson -lm
 // #include <yara.h>
 import "C"
 
@@ -13,7 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"github.com/hillu/go-yara"
+	"github.com/hillu/go-yara/v4"
 	"github.com/ulikunitz/xz"
 )
 
@@ -103,13 +103,14 @@ func MatchSamples(samplesDir string, rules *yara.Rules) {
 				return nil
 			}
 
-			matches, err := rules.ScanMem(fileContents, 0, 0)
+			matches := &yara.MatchRules{}
+			err = rules.ScanMem(fileContents, 0, 0, matches)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error scanning %s with Yara: %v\n", path, err)
 				return err
 			}
 
-			for _, match := range matches {
+			for _, match := range *matches {
 				fmt.Printf("%s: %s matches.\n", match.Rule, path)
 			}
 		}
